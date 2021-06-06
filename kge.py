@@ -56,6 +56,7 @@ def getRotationMatrix(A, B):
 
 def alignEmbeddings(aligns, e2, em1, em2, e=3):
     errors = []
+
     bar = IncrementalBar('Aligning...', max=e)
     for _ in range(e):
         mse = 0

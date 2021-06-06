@@ -4,15 +4,17 @@ from test_utils import getAligns, getCfm, getOntologies
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def test(k1p, k2p, t):
+def test(k1p, k2p, t, walks, fitE, alignT, alignE, resT):
     kg1 = KG(k1p)
     kg2 = KG(k2p)
 
     kgea = KGEA(kg1=kg1, kg2=kg2)
     kgea.init()
-    kgea.fit(walks=w, epochs=e)
-    kgea.alignEmbeddings(threshold=ap, epochs=e)
-    aligns = kgea.getAligns(threshold=tp)
+    kgea.fit(walks=walks, epochs=fitE)
+    p, e, s = kgea.alignEmbeddings(threshold=alignT, epochs=alignE)
+    plt.plot(e)
+    plt.show()
+    aligns = kgea.getAligns(threshold=resT)
 
     talings = getAligns(t)
 
@@ -21,13 +23,15 @@ def test(k1p, k2p, t):
 
 ap = 0.95
 tp = 0.9
-w = 2
-e = 10
+w = 3
+fe = 30
+ae = 10
 
 data = pd.DataFrame(columns=['ref', 'kg1', 'kg2', 'correct', 'ref-count', 'aligns'])
 
 for reference, kg1, kg2 in getOntologies():
-    res = test(kg1, kg2, reference)
+    res = test(kg1, kg2, reference, w, fe, ap, ae, tp)
+
     data = data.append({
         'ref': reference.split('/')[1],
         'kg1': res[1],
